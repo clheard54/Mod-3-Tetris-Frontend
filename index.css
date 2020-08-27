@@ -56,6 +56,12 @@ body {
 .div4 th, td {
   padding: 5px;
 }
+
+.floater {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
   
 .modal {
   display: none; /* Hidden by default */
@@ -79,7 +85,7 @@ body {
   width: 50%; /* Could be more or less, depending on screen size */
 }
 
-#start, #home {
+#start, #home, #mute, #pauseBtn {
   border-radius: 6px;
   border: 2px solid rgb(160, 47, 47);
   background-color:black;
@@ -91,11 +97,14 @@ body {
   color: white;
 }
   
-#start:hover {
+#start:hover, #mute:hover {
     background-color: #B95800;
     color: white;
 }
 
+#pauseBtn {
+  display: none
+}
 
 #pause-screen {
   text-align: center;

@@ -274,6 +274,7 @@ class Piece{
 
             if (this.y + r < 0){
                 checkHighScore();
+                audio.pause();
                 drawBoard();
                 checkRowFull();
                 clearInterval(timer);
@@ -311,6 +312,7 @@ let start = false;
 let rate = 600;
 let totalRows = 0;
 let currentLevel = 1;
+let soundOn = true;
 
 function setLevel(){
     
@@ -380,34 +382,58 @@ function addScore(rowsCleared){
     }
 };
 
+function pauseGame(){
+    clearInterval(timer);
+    timer = null;
+    document.getElementById("pause").style.display = "block";
+    audio.pause()
+};
 
-const startButton = document.querySelector("#landing button")
+const muteButton = document.getElementById("mute")
+muteButton.addEventListener("click", function(){
+    if (soundOn){
+        muteButton.innerText = "Unmute"
+        audio.pause()
+    } else {
+        audio.play()
+        muteButton.innerText = "Mute"
+    }
+    soundOn = !soundOn
+});
+
+const startButton = document.querySelector("#start")
+const pauseButton = document.querySelector("#pauseBtn")
 startButton.addEventListener("click", function(){
     const audio = document.getElementById("audio");
     audio.volume = "0.05";
     audio.play();
     startFalling(rate);
-    startButton.disabled = true;
+    startButton.disabled = true
+    startButton.style.display = "none";
+    pauseButton.style.display = "block";
+    pauseButton.style.margin = "auto";
     document.addEventListener("keydown", function(e) {
         if (e.keyCode === 32) {
-          if (start){
-            clearInterval(timer);
-            timer = null;
-            document.getElementById("pause").style.display = "block";
-            audio.pause()
-          } else if (!start) {
-            clearInterval(timer);
-            timer = null;
-            timer = setInterval(function(){
-              currentPiece.moveTetradDown();
-          }, rate);
-          document.getElementById("pause").style.display = "none";
-          audio.play();
-        };
-        };
+            if (start){
+                pauseGame();
+              } else if (!start) {
+                clearInterval(timer);
+                timer = null;
+                timer = setInterval(function(){
+                  currentPiece.moveTetradDown();
+                soundOn ? audio.play() : null;
+              }, rate);
+              document.getElementById("pause").style.display = "none";
+            pauseButton.disabled = false
+            };
+        }
         start = !start;
-      }
-      );
+      });
+    pauseButton.addEventListener("click", function(e) {
+        pauseGame();
+        pauseButton.disabled = true
+        start = !start;
+    });
 });
 
 let isRowFull = true;
